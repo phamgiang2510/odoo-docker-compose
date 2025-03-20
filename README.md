@@ -1,8 +1,9 @@
 # INSTRUCTIONS
 
-## 1. Install Docker
+## 1. Preparation
 
-See [Docker Desktop](https://docs.docker.com/desktop/)
+1. Install Docker: See [Docker Engine](https://docs.docker.com/engine/)
+2. Download or clone this repository
 
 ## 2. Choose the right docker-compose file
 
@@ -22,32 +23,42 @@ Otherwise, you can go to the next section.
 
 ## 4. Configure PostgreSQL
 
-Open `config/postgresql.conf` and change the parameters to your needs. You can use [PGTune](https://pgtune.leopard.in.ua/) to quickly generate the parameters.
+Open `config/postgresql.conf` and change the parameters to your needs. You can use [PGTune](https://pgtune.leopard.in.ua/) to quickly generate the parameters. Remember to add the line of `listen_addresses = '*'` if missing to allow connection from Odoo.
 
 ## 5. Configure Odoo
 
 1. Clone or download the Viindoo source code from [Viindoo](https://github.com/Viindoo/odoo) and put or extract it directly inside the `odoo` folder.
 2. Put your custom Odoo modules in the `extra-addons` folder.
-3. Open `config/odoo.conf` and change the parameters to your needs, except `addons_path`, `db_host`, `db_password`, `db_port`, `db_user`, `gevent_port` and `http_port` must be kept as they are.
-4. If you don't use proxy, remember to delete or comment the line of `proxy_mode = True` in `config/odoo.conf`.
+3. If your custom modules require additional Python packages, create a `requirements.txt` file in the `extra-addons` folder.
+4. Open `config/odoo.conf` and change the parameters to your needs, except `addons_path`, `db_host`, `db_password`, `db_port`, `db_user`, `gevent_port` and `http_port` must be kept as they are.
+5. If you don't use Nginx, remember to delete or comment the line of `proxy_mode = True` in `config/odoo.conf`.
 
 ## 6. Run system
 
 ```bash
-docker-compose up -d
+docker compose up -d --build
 ```
 
 ## 7. Other commands
 
 - Stop system
   ```bash
-  docker-compose down
+  docker compose down
   ```
 - Restart system
   ```bash
-  docker-compose restart
+  docker compose restart
   ```
 - Remove system
   ```bash
-  docker-compose down -v
+  docker compose down -v
+  ```
+- Rebuild and restart (when adding new requirements)
+  ```bash
+  docker compose down
+  docker compose up -d --build
+  ```
+- View system log
+  ```bash
+  docker compose logs
   ```
