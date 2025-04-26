@@ -2,6 +2,10 @@ FROM odoo:15
 
 USER root
 
+# Install some supporting packages for pip
+RUN apt update
+RUN apt install git build-essential -y
+
 # Copy extra-addons and install requirements
 COPY extra-addons /mnt/extra-addons
 RUN find /mnt/extra-addons -name "requirements.txt" -exec pip3 install -r {} \;
